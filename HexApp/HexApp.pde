@@ -8,20 +8,19 @@ boolean activeHexes[][];
 void setup() {
   size(800, 800);
 
-  hexSize = 20;
-  numCols = 25;
-  numRows = 25;
+  hexSize = 50;
+  numCols = 12;
+  numRows = 12;
 
   center = new HexCoord(floor(numCols/2), floor(numRows/2));
-  println(center.col, center.row);
-  
+
   activeHexes = new boolean[numCols][numRows];
   for (int col = 0; col < numCols; col++) {
     for (int row = 0; row < numRows; row++) {
       activeHexes[col][row] = false;
     }
   }
-  
+
   redraw();
 }
 
@@ -110,7 +109,19 @@ float indexToWorldY(int c, int r) {
 }
 
 int worldToIndexX(float x, float y) {
-  return floor(x / hexSize / 1.5);
+  int col = floor(x / hexSize / 1.5);
+
+  if (x % (1.5 * hexSize) < 0.5 * hexSize) {
+    float half = hexSize / 2;
+    float h = half * tan(PI/3);
+    float modX = x % (1.5 * hexSize);
+    float modY = (col % 2 == 0 ? y : y + h) % (2 * h);
+
+    if (modY < -2 * h * modX / hexSize + h || modY > 2 * h * modX / hexSize + h) {
+      return floor(x / hexSize / 1.5) - 1;
+    }
+  }
+  return col;
 }
 
 int worldToIndexY(float x, float y) {
@@ -128,22 +139,22 @@ void mouseReleased() {
   float centerY = indexToWorldY(center.col, center.row);
   float dx = mouseX - centerX;
   float dy = mouseY - centerY;
-  
-  int numSides = 6;
+
+  int numSides = 1;
   for (int i = 0; i < numSides; i++) {
     float a = (float) i * 2 * PI / numSides;
     float x = centerX + dx * cos(a) - dy * sin(a);
     float y = centerY + dx * sin(a) + dy * cos(a);
-    
+
     int col = worldToIndexX(x, y);
     int row = worldToIndexY(x, y);
     if (isValidHex(col, row)) {
       toggleHex(col, row);
     }
   }
-  
+
   redraw();
-  
+
   stroke(255, 0, 0);
   strokeWeight(2);
   for (int i = 0; i < numSides; i++) {
