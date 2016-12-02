@@ -12,7 +12,7 @@ void setup() {
 
   fileNamer = new FileNamer("output/export", "png");
 
-  hexSize = 20;
+  hexSize = 8;
   numCols = calculateCols(hexSize);
   numRows = calculateRows(hexSize);
 
@@ -58,8 +58,7 @@ void drawHexagon(int col, int row) {
     fill(255);
   }
 
-  stroke(0);
-  strokeWeight(1);
+  stroke(192);
   hex(x, y, hexSize);
 }
 
