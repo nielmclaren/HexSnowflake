@@ -1,4 +1,6 @@
 
+FileNamer fileNamer;
+
 int hexSize;
 int numCols;
 int numRows;
@@ -7,6 +9,8 @@ boolean activeHexes[][];
 
 void setup() {
   size(800, 800);
+
+  fileNamer = new FileNamer("output/export", "png");
 
   hexSize = 50;
   numCols = 12;
@@ -170,9 +174,12 @@ void keyReleased() {
     case ' ':
       redraw();
       break;
-    case 'r':
+    case 'c':
       clear();
       redraw();
+      break;
+    case 'r':
+      save(fileNamer.next());
       break;
   }
 }
